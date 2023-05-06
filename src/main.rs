@@ -1,8 +1,13 @@
 // Modules
 mod print;
+mod int;
+mod fun;
+mod memory;
 
 // Use
-use crate::print::printf;
+use crate::memory::*;
+use crate::fun::fun;
+
 use std::fs::File;
 use std::io::prelude::*;
 use std::env;
@@ -16,14 +21,11 @@ fn main() {
     file.read_to_string(&mut script).expect("\x1b[31mERR:\x1b[0m Cannot read file!");
 
     let code: Vec<&str> = script.split("\n").collect();
+
+    let mut stack: Vec<Item> = Vec::new();
+    let mut ptr_stack: Vec<Pointer> = Vec::new();
     
     for line in code.iter() {
-        let keyword: Vec<&str> = line.split("(").collect();
-        if keyword.len() != 1 {
-            match keyword[0].to_owned().as_str() {
-                "printf" => printf(line),
-                _ => eprintln!("\x1b[31mERR:\x1b[0m {}", line),
-            }
-        }
+        fun(line, &mut stack, &mut ptr_stack);
     }
 }
