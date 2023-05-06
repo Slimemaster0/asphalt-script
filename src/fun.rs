@@ -4,7 +4,7 @@ use crate::memory::*;
 pub fn fun(input: &str, stack: &mut Vec<Item>, ptr_stack: &mut Vec<Pointer>) {
     let keyword: Vec<&str> = input.split("(").collect();
     if keyword.len() != 1 {
-        match keyword[0].to_owned().as_str() {
+        match keyword[0].to_owned().as_str().trim() {
             "printf" => printf(input),
             "new" => new_var(input, stack, ptr_stack),
             "printvar" => print_var(input, stack, ptr_stack),           
