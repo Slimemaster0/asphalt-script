@@ -26,7 +26,7 @@ pub fn print_var(string: &str, stack: &mut Vec<Item>, ptr_stack: &mut Vec<Pointe
     let var = deref_pointer(&ptr_stack, &content[0], stack);
 
     match var {
-        Item::Int(i) => print!("{}", i.value),
+        Item::Int(i) => print!("{}", i),
     }
 
 }

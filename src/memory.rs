@@ -1,9 +1,9 @@
-use crate::int::Int;
 use std::process::exit;
+
 
 #[derive(Copy, Clone)]
 pub enum Item {
-    Int(Int)
+    Int(i32)
 }
 
 pub struct Pointer {

@@ -3,6 +3,7 @@ mod print;
 mod int;
 mod fun;
 mod memory;
+mod string;
 
 // Use
 use crate::memory::*;
