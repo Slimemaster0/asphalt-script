@@ -1,9 +1,7 @@
 // Modules
 mod print;
-mod int;
 mod fun;
 mod memory;
-mod string;
 
 // Use
 use crate::memory::*;
@@ -24,9 +22,8 @@ fn main() {
     let code: Vec<&str> = script.split("\n").collect();
 
     let mut stack: Vec<Item> = Vec::new();
-    let mut ptr_stack: Vec<Pointer> = Vec::new();
     
     for line in code.iter() {
-        fun(line, &mut stack, &mut ptr_stack);
+        fun(line, &mut stack);
     }
 }

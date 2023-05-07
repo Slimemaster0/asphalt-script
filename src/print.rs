@@ -19,15 +19,19 @@ pub fn printf(string: &str) {
 }
 
 
-pub fn print_var(string: &str, stack: &mut Vec<Item>, ptr_stack: &mut Vec<Pointer>) {
+pub fn print_var(string: &str, stack: &mut Vec<Item>) {
     let tmp_str1: Vec<&str> = string.split("(").collect();
     let content: Vec<&str> = tmp_str1[1].split(")").collect();
 
-    let ref var = stack[read_pointer(&ptr_stack, &content[0])];
+    let ref var = stack[read_pointer(&stack, &content[0])];
 
-    match var {
-        Item::Int(i) => print!("{}", i),
-        Item::String(i) => print!("{}", i)
+    match &var.value {
+        Value::Int(i) => print!("{}", i),
+        Value::String(i) => print!("{}", i),
+
+
+
+        Value::Null => {}
     }
 
 }
