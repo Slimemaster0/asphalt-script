@@ -4,6 +4,7 @@ use std::process::exit;
 
 use crate::print::*;
 use crate::memory::*;
+use crate::test::*;
 
 pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     let keyword: Vec<&str> = input.split("(").collect();
@@ -12,6 +13,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
             "printf" => printf(input),
             "new" => new_var(input, stack),
             "printvar" => print_var(input, stack),
+            "test_parse_args" => test_parse_args(parse_args(input, stack)),
 
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
         }
@@ -19,7 +21,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     return Value::Null;
 }
 
-fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
+pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
 
     if str.len() == 0 { return Vec::new(); };
 
@@ -62,7 +64,7 @@ fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
 
         }  else if args_str[i] // Floating point numbers
                 .chars()
-                .nth(args_str[i].len())
+                .nth(args_str[i].len() - 1)
                 .expect("add -1 to float checking") == 'F' {
 
           //  args.push();

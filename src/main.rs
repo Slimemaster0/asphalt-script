@@ -2,6 +2,7 @@
 mod print;
 mod fun;
 mod memory;
+mod test;
 
 // Use
 use crate::memory::*;
