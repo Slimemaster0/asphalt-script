@@ -1,12 +1,14 @@
 // vim:fileencoding=utf-8:foldmethod=marker
 
 use std::process::exit;
+use std::env;
 
 use crate::print::*;
 use crate::memory::*;
 use crate::test::*;
 use crate::errcodes::*;
 use crate::process::*;
+use crate::format::*;
 
 pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     let keyword: Vec<&str> = input.split("(").collect();
@@ -58,7 +60,7 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
             args.push(fun(&args_str[i], r));
             continue;
 
-        } else if args_str[i].contains("\"") { // String
+        } else if args_str[i].contains("\"") { // {{{ String
 
             let raw_content: Vec<&str> = args_str[i].split("\"").collect();
 
@@ -74,27 +76,49 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
 
             args.push(Value::String(content));
             continue;
-
+// }}}
         }  else if args_str[i].chars().nth(args_str[i].len() - 1).expect("add -1 to float checking") == 'F' { // Floating point number
 
             //  args.push();
             eprintln!("Float is not implemented yet");
             exit(NOT_IMPL);
 
-        } else if args_str[i].contains("&") {
+        } else if args_str[i].chars().nth(0).expect("No char at 0") == '&' {
             let valname: Vec<&str> = args_str[i].as_str().split("&").collect();
             let ref val = stack[read_pointer(stack, valname[1])];
 
             args.push(val.value.to_owned());
 
             continue;   
-        } else if args_str[i] == "yup" {
+
+        } else if args_str[i] == "yup" { // {{{ Boolean
             args.push(Value::Bool(true));
             continue;
         } else if args_str[i] == "nope" {
             args.push(Value::Bool(false));
             continue;
-        }
+
+            // }}}
+        } else if args_str[i].chars().nth(0).expect("No char at 0") == '$' { // {{{ environment variables and program arguments
+            let name = remove_first(args_str[i].as_str()).expect("{RED}Err:{RESET_FORMAT} Could not remove first character");
+            
+            if name.contains("arg") { // Reading an argument
+                let number_str: Vec<&str> = name.split("arg").collect();
+                let number = number_str[1].parse::<usize>().expect("{RED}Err:{RESET_FORMAT} argument are read as $arg{BOLD}n{RESET_FORMAT}");
+
+                let argv: Vec<String> = env::args().collect();
+                args.push(Value::String(argv[number +1].clone()));
+                continue;
+            }
+
+            match env::var(name) { // Reading an environment variable
+                Ok(v) => args.push(Value::String(v)),
+                Err(v) => panic!("{RED}Err:{RESET_FORMAT} {v}")
+            }
+
+            continue;
+// }}}
+        }   
 
         let int = args_str[i].parse::<i32>(); // int
         match int {
