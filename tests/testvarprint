@@ -1,0 +1,4 @@
+#!/usr/bin/asphalt-scipt
+
+new("nice", int, 69)
+printf(&nice, "\n")

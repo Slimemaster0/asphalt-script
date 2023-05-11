@@ -3,3 +3,5 @@
 test_parse_args(69)
 test_parse_args("Demo Text!")
 test_parse_args("Sample Text!", 420)
+
+printf("test", "test2")

@@ -10,7 +10,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     let keyword: Vec<&str> = input.split("(").collect();
     if keyword.len() != 1 {
         match keyword[0].to_owned().as_str().trim() {
-            "printf" => printf(input),
+            "printf" => printf(parse_args(input, stack)),
             "new" => new_var(input, stack),
             "printvar" => print_var(input, stack),
             "test_parse_args" => test_parse_args(parse_args(input, stack)),
@@ -48,30 +48,51 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
     }
 
     let mut args: Vec<Value> = Vec::new();
-    
+
     for i in 0..args_str.len() { // {{{ parse each arguments
-                                 
+
         if args_str[i].contains("(*)") { // function
             let r = &mut *stack;
             args.push(fun(&args_str[i], r));
             continue;
 
         } else if args_str[i].contains("\"") { // String
-                                               
-            let content: Vec<&str> = args_str[i].split("\"").collect();
-            args.push(Value::String(content[1].to_string()));
+
+            let raw_content: Vec<&str> = args_str[i].split("\"").collect();
+
+            let content_split: Vec<&str> = raw_content[1].split("\\n").collect();
+            let mut content = String::new();
+
+            for i in 0..content_split.len() {
+                content.push_str(content_split[i]);
+                if i != content_split.len() -1 {
+                    content.push_str("\n");
+                }
+            }
+
+            args.push(Value::String(content));
             continue;
 
         }  else if args_str[i] // Floating point numbers
-                .chars()
+            .chars()
                 .nth(args_str[i].len() - 1)
                 .expect("add -1 to float checking") == 'F' {
 
-          //  args.push();
-            eprintln!("Float is not implemented yet");
-            exit(10);
-            
-        }
+                    //  args.push();
+                    eprintln!("Float is not implemented yet");
+                    exit(10);
+
+                } else if args_str[i].contains("&") {
+                    let valname: Vec<&str> = args_str[i].as_str().split("&").collect();
+                    let ref val = stack[read_pointer(stack, valname[1])];
+
+                    match &val.value {
+                        Value::Int(i) => args.push(Value::Int(i.to_owned())),
+                        Value::String(i) => args.push(Value::String(i.to_owned())),
+                        Value::Null => eprintln!("W: Tried to read null"),
+                    }
+                    continue;   
+                }
 
         let int = args_str[i].parse::<i32>(); // int
         match int {
