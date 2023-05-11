@@ -24,7 +24,7 @@ pub fn read_pointer(stack: &Vec<Item>, name: &str) -> usize { // {{{
             }
         }
     eprintln!("\x1b[31mERR:\x1b[0m Cannot find value '{}'!", name);
-    exit(69420);
+    exit(ITEM_NOT_EXIST);
 } // }}}
 
 pub fn new_var(args: Vec<Value>, stack: &mut Vec<Item>) { // {{{

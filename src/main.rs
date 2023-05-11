@@ -4,6 +4,8 @@ mod fun;
 mod memory;
 mod test;
 mod errcodes;
+mod process;
+mod format;
 
 // Use
 use crate::memory::*;

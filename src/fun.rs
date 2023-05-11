@@ -6,6 +6,7 @@ use crate::print::*;
 use crate::memory::*;
 use crate::test::*;
 use crate::errcodes::*;
+use crate::process::*;
 
 pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     let keyword: Vec<&str> = input.split("(").collect();
@@ -14,6 +15,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
             "printf" => printf(parse_args(input, stack)),
             "new" => new_var(parse_args(input, stack), stack),
             "test_parse_args" => test_parse_args(parse_args(input, stack)),
+            "die" => die(parse_args(input, stack)),
 
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
         }
