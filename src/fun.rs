@@ -13,7 +13,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
         match keyword[0].to_owned().as_str().trim() {
             "printf" => printf(parse_args(input, stack)),
             "new" => new_var(parse_args(input, stack), stack),
-            "printvar" => print_var(input, stack),
+            "printvar" => print_var(input, stack), // Deprecated
             "test_parse_args" => test_parse_args(parse_args(input, stack)),
 
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
