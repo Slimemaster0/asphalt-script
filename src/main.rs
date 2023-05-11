@@ -3,6 +3,7 @@ mod print;
 mod fun;
 mod memory;
 mod test;
+mod errcodes;
 
 // Use
 use crate::memory::*;

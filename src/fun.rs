@@ -5,13 +5,14 @@ use std::process::exit;
 use crate::print::*;
 use crate::memory::*;
 use crate::test::*;
+use crate::errcodes::*;
 
 pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     let keyword: Vec<&str> = input.split("(").collect();
     if keyword.len() != 1 {
         match keyword[0].to_owned().as_str().trim() {
             "printf" => printf(parse_args(input, stack)),
-            "new" => new_var(input, stack),
+            "new" => new_var(parse_args(input, stack), stack),
             "printvar" => print_var(input, stack),
             "test_parse_args" => test_parse_args(parse_args(input, stack)),
 
@@ -80,7 +81,7 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
 
                     //  args.push();
                     eprintln!("Float is not implemented yet");
-                    exit(10);
+                    exit(NOT_IMPL);
 
                 } else if args_str[i].contains("&") {
                     let valname: Vec<&str> = args_str[i].as_str().split("&").collect();
@@ -89,7 +90,7 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
                     match &val.value {
                         Value::Int(i) => args.push(Value::Int(i.to_owned())),
                         Value::String(i) => args.push(Value::String(i.to_owned())),
-                        Value::Null => eprintln!("W: Tried to read null"),
+                        Value::Null => eprintln!("W: Tried to read a 'Null' value"),
                     }
                     continue;   
                 }
@@ -98,8 +99,8 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
         match int {
             Ok(int) => args.push(Value::Int(int)),
             Err(e) => {
-                eprintln!("\x1b[31mERR:\x1b[0m {}", e);
-                exit(0x666);
+                eprintln!("\x1b[31mErr:\x1b[0m {}", e);
+                exit(FAILED_PARSE);
             }
         }
 

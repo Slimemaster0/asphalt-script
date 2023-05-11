@@ -1,6 +1,7 @@
 // vim:fileencoding=utf-8:foldmethod=marker
 
 use std::process::exit;
+use crate::errcodes::*;
 
 #[derive(Clone)]
 pub enum Value {
@@ -25,37 +26,20 @@ pub fn read_pointer(stack: &Vec<Item>, name: &str) -> usize { // {{{
     exit(69420);
 } // }}}
 
-pub fn new_var(string: &str, mem: &mut Vec<Item>) { // {{{
-    let mut new_str = String::from(string);
-    new_str.pop();
+pub fn new_var(args: Vec<Value>, stack: &mut Vec<Item>) { // {{{
+    if args.len() != 2 {
+        eprintln!("\x1b31mErr: 'new' takes in 2 arguments");
+        exit(BAD_ARGC);
+    }
 
-    let tmp_str1: Vec<&str> = new_str.split("(").collect();
-    let content: Vec<&str> = tmp_str1[1].split("(").collect();
-
-    let args: Vec<&str> = content[0].split(",").collect();
-
-    let var_type = args[1].trim();
-    let var_value = args[2].trim();
-
-    match var_type { // {{{ create a variable of the type specified
-        "int" => {
-            let value: i32 = var_value.parse().unwrap();
-            let name: Vec<&str> = args[0].split("\"").collect();
-            mem.push(Item { name: name[1].to_string(), value: Value::Int(value) } );
-            },
-
-        "str" | "string" => {
-                let value: Vec<&str> = var_value.split("\"").collect();
-                let name: Vec<&str> = args[0].split("\"").collect();
-
-                mem.push(Item { name: name[1].to_string(), value: Value::String(value[1].to_string())});
-            }
-
-        _ => {
-            eprintln!("\x1b[31mERR:\x1b[0m unknown type: {}", var_type);
-            exit(0x20)
+    match &args[0] {
+        Value::String(i) => {
+            let item: Item = Item { value: args[1].to_owned(), name: i.to_owned() };
+            stack.push(item);
         }
-    } // }}}
-    
-
+        _ => {
+            eprintln!("\x1b[31mErr:\x1b[0m The first argument for 'new' must be a 'String'");
+            exit(WRONG_ARGT);
+        }
+    }
 } // }}}
