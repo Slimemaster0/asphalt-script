@@ -8,6 +8,7 @@ pub enum Value {
     Null,
     Int(i32),
     String(String),
+    Bool(bool),
 }
 
 #[derive(Clone)]

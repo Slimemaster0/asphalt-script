@@ -13,7 +13,6 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
         match keyword[0].to_owned().as_str().trim() {
             "printf" => printf(parse_args(input, stack)),
             "new" => new_var(parse_args(input, stack), stack),
-            "printvar" => print_var(input, stack), // Deprecated
             "test_parse_args" => test_parse_args(parse_args(input, stack)),
 
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
@@ -74,26 +73,26 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
             args.push(Value::String(content));
             continue;
 
-        }  else if args_str[i] // Floating point numbers
-            .chars()
-                .nth(args_str[i].len() - 1)
-                .expect("add -1 to float checking") == 'F' {
+        }  else if args_str[i].chars().nth(args_str[i].len() - 1).expect("add -1 to float checking") == 'F' { // Floating point number
 
-                    //  args.push();
-                    eprintln!("Float is not implemented yet");
-                    exit(NOT_IMPL);
+            //  args.push();
+            eprintln!("Float is not implemented yet");
+            exit(NOT_IMPL);
 
-                } else if args_str[i].contains("&") {
-                    let valname: Vec<&str> = args_str[i].as_str().split("&").collect();
-                    let ref val = stack[read_pointer(stack, valname[1])];
+        } else if args_str[i].contains("&") {
+            let valname: Vec<&str> = args_str[i].as_str().split("&").collect();
+            let ref val = stack[read_pointer(stack, valname[1])];
 
-                    match &val.value {
-                        Value::Int(i) => args.push(Value::Int(i.to_owned())),
-                        Value::String(i) => args.push(Value::String(i.to_owned())),
-                        Value::Null => eprintln!("W: Tried to read a 'Null' value"),
-                    }
-                    continue;   
-                }
+            args.push(val.value.to_owned());
+
+            continue;   
+        } else if args_str[i] == "yup" {
+            args.push(Value::Bool(true));
+            continue;
+        } else if args_str[i] == "nope" {
+            args.push(Value::Bool(false));
+            continue;
+        }
 
         let int = args_str[i].parse::<i32>(); // int
         match int {

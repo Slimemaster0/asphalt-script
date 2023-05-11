@@ -5,6 +5,8 @@ pub fn test_parse_args(args: Vec<Value>) {
         match &args[i] {
             Value::Int(v) => println!("Int: {}", v),
             Value::String(v) => println!("String: {}", v),
+            Value::Bool(v) => println!("Bool: {}", v),
+
             Value::Null => println!("Null")
         }
     }

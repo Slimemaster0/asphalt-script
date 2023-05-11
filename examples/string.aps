@@ -1,3 +1,2 @@
 new("foo", "bar")
-printvar(foo)
-printf("\n")
+printf(&foo, "\n")

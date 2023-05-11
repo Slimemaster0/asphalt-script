@@ -1,0 +1,4 @@
+new("true", yup)
+new("false", nope)
+printf("true: ", &true, "\n")
+printf("false: ", &false, "\n")
