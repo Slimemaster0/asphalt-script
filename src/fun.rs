@@ -111,6 +111,9 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
                 let argv: Vec<String> = env::args().collect();
                 args.push(Value::String(argv[number +1].clone()));
                 continue;
+            } else if name.contains("os") {
+                args.push(Value::String(env::consts::OS.to_string()));
+                continue;
             }
 
             match env::var(name) { // Reading an environment variable
@@ -120,7 +123,9 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
 
             continue;
 // }}}
-        }   
+        } else if args_str[i].chars().nth(0).expect("No char at 0") == '¤' {
+            
+        }
 
         let int = args_str[i].parse::<i32>(); // int
         match int {
