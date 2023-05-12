@@ -1,1 +1,1 @@
-printf($arg0, "\n", $arg1, "\n")
+printf($arg0, "\n", $arg1, "\n");

@@ -24,7 +24,7 @@ fn main() {
 
     file.read_to_string(&mut script).expect("\x1b[31mERR:\x1b[0m Cannot read file!");
 
-    let code: Vec<&str> = script.split("\n").collect();
+    let code: Vec<&str> = script.split(";").collect();
 
     let mut stack: Vec<Item> = Vec::new();
     

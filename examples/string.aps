@@ -1,2 +1,2 @@
-new("foo", "bar")
-printf(&foo, "\n")
+new("foo", "bar");
+printf(&foo, "\n");

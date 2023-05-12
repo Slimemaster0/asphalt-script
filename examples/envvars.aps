@@ -1,1 +1,1 @@
-printf($HOME, "\n")
+printf($HOME, "\n");
