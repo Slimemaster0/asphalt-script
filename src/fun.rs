@@ -57,7 +57,7 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
 
     for i in 0..args_str.len() { // {{{ parse each arguments
 
-        if args_str[i].contains("(") && args_str[i].contains(")") { // function
+        if args_str[i].contains("(") && args_str[i].chars().nth(args_str[i].len() -1).expect("No char at {args_str[i] -1}") == ')' { // function
             let r = &mut *stack;
             args.push(fun(&args_str[i], r));
             continue;
