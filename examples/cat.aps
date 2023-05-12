@@ -1,0 +1,1 @@
+printf(readf($arg1))

@@ -9,6 +9,7 @@ use crate::test::*;
 use crate::errcodes::*;
 use crate::process::*;
 use crate::format::*;
+use crate::read::read_to_string;
 
 pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     let keyword: Vec<&str> = input.split("(").collect();
@@ -18,6 +19,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
             "new" => new_var(parse_args(input, stack), stack),
             "test_parse_args" => test_parse_args(parse_args(input, stack)),
             "die" => die(parse_args(input, stack)),
+            "readf" => return read_to_string(parse_args(input, stack)),
 
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
         }
@@ -55,7 +57,7 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
 
     for i in 0..args_str.len() { // {{{ parse each arguments
 
-        if args_str[i].contains("(*)") { // function
+        if args_str[i].contains("(") && args_str[i].contains(")") { // function
             let r = &mut *stack;
             args.push(fun(&args_str[i], r));
             continue;

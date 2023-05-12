@@ -6,6 +6,7 @@ mod test;
 mod errcodes;
 mod process;
 mod format;
+mod read;
 
 // Use
 use crate::memory::*;

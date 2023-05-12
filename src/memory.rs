@@ -9,6 +9,7 @@ pub enum Value {
     Int(i32),
     String(String),
     Bool(bool),
+    Error(i32, String)
 }
 
 #[derive(Clone)]

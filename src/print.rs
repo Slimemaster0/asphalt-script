@@ -11,6 +11,7 @@ pub fn printf(args: Vec<Value>) {
                         false => print!("nope")
                     }
                 }
+            Value::Error(_, v) => println!("{}", v),
 
             Value::Null => eprintln!("Tried to print a 'Null'")
         }
