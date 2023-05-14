@@ -114,6 +114,9 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
             } else if name.contains("os") {
                 args.push(Value::String(env::consts::OS.to_string()));
                 continue;
+            } else if args_str[i] .contains("version") {
+                args.push(Value::String(env!("CARGO_PKG_VERSION").to_string()));
+                continue;
             }
 
             match env::var(name) { // Reading an environment variable
@@ -124,8 +127,16 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
             continue;
 // }}}
         } else if args_str[i].chars().nth(0).expect("No char at 0") == '¤' {
-            
+            match args_str[i].as_str() {
+
+                _ => {
+                    eprintln!("{RED}Err:{RESET_FORMAT} Unknown variable: {}", args_str[i]);
+                    exit(ITEM_NOT_EXIST);
+                }
+            }
+            continue;
         }
+        
 
         let int = args_str[i].parse::<i32>(); // int
         match int {
