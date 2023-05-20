@@ -1,0 +1,6 @@
+new("str", "nice");
+new("int", 69);
+new("bool", yup);
+printf(&int, "\n");
+del("int");
+printf(&int, "\n"); 
