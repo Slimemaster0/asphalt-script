@@ -47,7 +47,7 @@ pub fn new_var(args: Vec<Value>, stack: &mut Vec<Item>) { // {{{
     }
 } // }}}
 
-pub fn del_var(args: Vec<Value>, stack: &mut Vec<Item>) {
+pub fn del_var(args: Vec<Value>, stack: &mut Vec<Item>) { // {{{
     if args.len() != 1 {
         eprintln!("{RED}Err:{RESET_FORMAT} 'del' takes in 1 argument");
         exit(BAD_ARGC);
@@ -64,4 +64,4 @@ pub fn del_var(args: Vec<Value>, stack: &mut Vec<Item>) {
         }
 
     }
-}
+} // }}}
