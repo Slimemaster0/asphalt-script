@@ -1,6 +1,6 @@
 // Modules
 mod print;
-mod fun;
+mod lexer;
 mod memory;
 mod test;
 mod errcodes;
@@ -10,7 +10,7 @@ mod read;
 
 // Use
 use crate::memory::*;
-use crate::fun::fun;
+use crate::lexer::fun;
 
 use std::fs::File;
 use std::io::prelude::*;
