@@ -10,6 +10,7 @@ use crate::errcodes::*;
 use crate::process::*;
 use crate::format::*;
 use crate::read::read_to_string;
+use crate::binops::binops;
 
 pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     if input.contains("(") && input.contains(")") {
@@ -21,6 +22,13 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
             "die" => die(parse_args(input, stack)),
             "readf" => return read_to_string(parse_args(input, stack)),
             "del" => del_var(parse_args(input, stack), stack),
+
+            // {{{ binary operations
+            "add" => return binops(parse_args(input, stack), '+'),
+            "sub" => return binops(parse_args(input, stack), '-'),
+            "mul" => return binops(parse_args(input, stack), '*'),
+            "div" => return binops(parse_args(input, stack), '/'),
+            // }}}
 
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
         }

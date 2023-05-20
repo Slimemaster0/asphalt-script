@@ -7,6 +7,7 @@ mod errcodes;
 mod process;
 mod format;
 mod read;
+mod binops;
 
 // Use
 use crate::memory::*;

@@ -1,0 +1,6 @@
+new("i1", 420);
+new("i2", 69);
+printf("Addition: ", &i1, " + ", &i2, " = ", add(&i1, &i2), "\n");
+printf("Subtraction: ", &i1, " - ", &i2, " = ", sub(&i1, &i2), "\n");
+printf("Division: ", &i1, " / ", &i2, " = ", div(&i1, &i2), "\n");
+printf("Multiplication: ", &i1, " * ", &i2, " = ", mul(&i1, &i2), "\n");
