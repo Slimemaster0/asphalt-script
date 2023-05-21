@@ -8,4 +8,4 @@ printf("Second time: ", &mut_var, "\n");
 
 # Mutate the variable "mut_var" again but change the type to String and print it;
 mut("mut_var", "nice\n");
-printf(&mut_var);
+printf("Now as a string: ", &mut_var);
