@@ -31,7 +31,7 @@ fn main() {
     
     let mut i: usize = 0;
     while code.len() > i {
-        if code[i].len() > 0 {
+        if code[i].trim().len() > 0 {
             if code[i].trim().chars().nth(0).expect("No char at 0 - main") == '#' {
                 i+=1;
                 continue;
