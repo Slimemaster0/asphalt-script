@@ -1,0 +1,4 @@
+new("imut", nope, 69);
+printf("First time: ", &imut, "\n");
+mut("imut", 420);
+printf("Second time: ", &imut, "\n");

@@ -1,5 +1,6 @@
 // vim:fileencoding=utf-8:foldmethod=marker
 
+use std::eprintln;
 use std::process::exit;
 use crate::errcodes::*;
 use crate::format::*;
@@ -76,7 +77,26 @@ pub fn del_var(args: Vec<Value>, stack: &mut Vec<Item>) { // {{{
     }
 } // }}}
 
-//fn mut_var(args: Vec<Value>, stack: &mut Vec<Item>) {
-//    if args.len() != 2 {
-//    }
-//}
+pub fn mut_var(args: Vec<Value>, stack: &mut Vec<Item>) { // {{{ Mutate a variable
+    if args.len() != 2 {
+        eprintln!("\x1b31mErr:\x1b0m 'mut' takes in 2 arguments");
+        exit(BAD_ARGC);
+    }
+
+    match &args[0] {
+        Value::String(s) => {
+            let ptr = read_pointer(&stack.clone(), s.as_str());
+            if stack[ptr].mutability {
+                stack[ptr].value = args[1].clone();
+            } else {
+                eprintln!("{RED}Err:{RESET_FORMAT} The value \"{s}\" is imutable!");
+                exit(MISSING_ATTRABUTE);
+            }
+        }
+
+        _ => {
+            eprintln!("{RED}Err:{RESET_FORMAT} The first argument for 'mut' should be of type 'String'");
+            exit(WRONG_ARGT);
+        }
+    }
+} // }}}

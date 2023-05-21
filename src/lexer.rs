@@ -24,6 +24,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut usize) -> Value {
             // {{{ Memory
             "del" => del_var(parse_args(input, stack, line_num), stack),
             "new" => new_var(parse_args(input, stack, line_num), stack),
+            "mut" => mut_var(parse_args(input, stack, line_num), stack),
             // }}}
 
             // {{{ binary operations
