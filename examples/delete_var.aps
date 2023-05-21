@@ -1,6 +1,6 @@
-new("str", "nice");
-new("int", 69);
-new("bool", yup);
+new("str", nope, "nice");
+new("int", nope, 69);
+new("bool", nope, yup);
 printf(&int, "\n");
 del("int");
 printf(&int, "\n"); 

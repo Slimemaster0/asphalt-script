@@ -29,7 +29,9 @@ fn main() {
 
     let mut stack: Vec<Item> = Vec::new();
     
-    for line in code.iter() {
-        fun(line, &mut stack);
+    let mut i: usize = 0;
+    while code.len() > i {
+        fun(code[i], &mut stack, &mut i);
+        i+=1;
     }
 }

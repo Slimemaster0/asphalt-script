@@ -1,2 +1,2 @@
-new("foo", 69);
+new("foo", nope, 69);
 printf(&foo, "\n");

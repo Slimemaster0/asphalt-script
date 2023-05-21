@@ -1,4 +1,4 @@
-new("true", yup);
-new("false", nope);
+new("true", nope, yup);
+new("false", nope, nope);
 printf("true: ", &true, "\n");
 printf("false: ", &false, "\n");

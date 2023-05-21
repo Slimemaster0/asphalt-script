@@ -1,2 +1,2 @@
-new("foo", "bar");
+new("foo", nope, "bar");
 printf(&foo, "\n");

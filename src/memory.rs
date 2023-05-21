@@ -17,6 +17,7 @@ pub enum Value {
 pub struct Item {
     pub value: Value,
     pub name: String,
+    pub mutability: bool,
 }
 
 pub fn read_pointer(stack: &Vec<Item>, name: &str) -> usize { // {{{
@@ -30,15 +31,24 @@ pub fn read_pointer(stack: &Vec<Item>, name: &str) -> usize { // {{{
 } // }}}
 
 pub fn new_var(args: Vec<Value>, stack: &mut Vec<Item>) { // {{{
-    if args.len() != 2 {
-        eprintln!("\x1b31mErr:\x1b0m 'new' takes in 2 arguments");
+    if args.len() != 3 {
+        eprintln!("\x1b31mErr:\x1b0m 'new' takes in 3 arguments");
         exit(BAD_ARGC);
     }
 
     match &args[0] {
         Value::String(i) => {
-            let item: Item = Item { value: args[1].to_owned(), name: i.to_owned() };
-            stack.push(item);
+            match &args[1] {
+                Value::Bool(b) => {
+                    let item: Item = Item { value: args[2].to_owned(), name: i.to_owned(), mutability: b.to_owned() };
+                    stack.push(item);
+                }
+                
+                _ => {
+                    eprintln!("{RED}Err:{RESET_FORMAT} The second argument must be of type 'bool'");
+                    exit(WRONG_ARGT);
+                }
+            }
         }
         _ => {
             eprintln!("\x1b[31mErr:\x1b[0m The first argument for 'new' must be a 'String'");
@@ -65,3 +75,8 @@ pub fn del_var(args: Vec<Value>, stack: &mut Vec<Item>) { // {{{
 
     }
 } // }}}
+
+//fn mut_var(args: Vec<Value>, stack: &mut Vec<Item>) {
+//    if args.len() != 2 {
+//    }
+//}

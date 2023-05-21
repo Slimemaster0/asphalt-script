@@ -12,22 +12,25 @@ use crate::format::*;
 use crate::read::read_to_string;
 use crate::binops::binops;
 
-pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
+pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut usize) -> Value {
     if input.contains("(") && input.contains(")") {
     let keyword: Vec<&str> = input.split("(").collect();
         match keyword[0].to_owned().as_str().trim() {
-            "printf" => printf(parse_args(input, stack)),
-            "new" => new_var(parse_args(input, stack), stack),
-            "test_parse_args" => test_parse_args(parse_args(input, stack)),
-            "die" => die(parse_args(input, stack)),
-            "readf" => return read_to_string(parse_args(input, stack)),
-            "del" => del_var(parse_args(input, stack), stack),
+            "printf" => printf(parse_args(input, stack, line_num)),
+            "test_parse_args" => test_parse_args(parse_args(input, stack, line_num)),
+            "die" => die(parse_args(input, stack, line_num)),
+            "readf" => return read_to_string(parse_args(input, stack, line_num)),
+
+            // {{{ Memory
+            "del" => del_var(parse_args(input, stack, line_num), stack),
+            "new" => new_var(parse_args(input, stack, line_num), stack),
+            // }}}
 
             // {{{ binary operations
-            "add" => return binops(parse_args(input, stack), '+'),
-            "sub" => return binops(parse_args(input, stack), '-'),
-            "mul" => return binops(parse_args(input, stack), '*'),
-            "div" => return binops(parse_args(input, stack), '/'),
+            "add" => return binops(parse_args(input, stack, line_num), '+'),
+            "sub" => return binops(parse_args(input, stack, line_num), '-'),
+            "mul" => return binops(parse_args(input, stack, line_num), '*'),
+            "div" => return binops(parse_args(input, stack, line_num), '/'),
             // }}}
 
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
@@ -36,7 +39,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>) -> Value {
     return Value::Null;
 }
 
-pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
+pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut usize) -> Vec<Value> { // {{{
 
     if str.len() == 0 { return Vec::new(); };
 
@@ -124,7 +127,8 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>) -> Vec<Value> { // {{{
 
         if args_str[i].contains("(") && args_str[i].chars().nth(args_str[i].len() -1).expect("No char at {args_str[i] -1}") == ')' { // function
             let r = &mut *stack;
-            args.push(fun(&args_str[i], r));
+            let l = &mut *line_num;
+            args.push(fun(&args_str[i], r, l));
             continue;
 
         } else if args_str[i].contains("\"") { // {{{ String
