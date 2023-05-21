@@ -1,4 +1,6 @@
 use crate::memory::*;
+use crate::errcodes::*;
+use std::process::exit;
 
 pub fn printf(args: Vec<Value>) {
     for i in 0..args.len() {
@@ -13,7 +15,10 @@ pub fn printf(args: Vec<Value>) {
                 }
             Value::Error(_, v) => println!("{}", v),
 
-            Value::Null => eprintln!("Tried to print a 'Null'")
+            Value::Null => {
+                eprintln!("Tried to print a 'Null' type");
+                exit(STOP_MESSING_WITH_NULL_VARS);
+            }
         }
     }
 }
