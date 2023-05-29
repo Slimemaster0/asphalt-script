@@ -127,9 +127,7 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut usize) -> Vec
     for i in 0..args_str.len() { // {{{ parse each argument
 
         if args_str[i].contains("(") && args_str[i].chars().nth(args_str[i].len() -1).expect("No char at {args_str[i] -1}") == ')' { // function
-            let r = &mut *stack;
-            let l = &mut *line_num;
-            args.push(fun(&args_str[i], r, l));
+            args.push(fun(&args_str[i], stack, line_num));
             continue;
 
         } else if args_str[i].contains("\"") { // {{{ String
