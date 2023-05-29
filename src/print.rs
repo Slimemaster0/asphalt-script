@@ -8,9 +8,10 @@ pub fn printf(args: Vec<Value>) {
             Value::Int(v) => print!("{}", v),
             Value::String(v) => print!("{}", v),
             Value::Bool(v) => {
-                    match v {
-                        true => print!("yup"),
-                        false => print!("nope")
+                    if v.to_owned() {
+                        print!("yup");
+                    } else {
+                        print!("nope");
                     }
                 }
             Value::Error(_, v) => println!("{}", v),
