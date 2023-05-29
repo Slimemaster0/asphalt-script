@@ -8,6 +8,7 @@ mod process;
 mod format;
 mod read;
 mod binops;
+mod jump;
 
 // Use
 use crate::memory::*;
@@ -29,16 +30,16 @@ fn main() {
 
     let mut stack: Vec<Item> = Vec::new();
     
-    let mut i: usize = 0;
-    while code.len() > i {
-        if code[i].trim().len() > 0 {
-            if code[i].trim().chars().nth(0).expect("No char at 0 - main") == '#' {
+    let mut i: u64 = 0;
+    while code.len() as u64 > i {
+        if code[i as usize].trim().len() > 0 {
+            if code[i as usize].trim().chars().nth(0).expect("No char at 0 - main") == '#' {
                 i+=1;
                 continue;
             }
         }
 
-        fun(code[i], &mut stack, &mut i);
+        fun(code[i as usize], &mut stack, &mut i);
         i+=1;
     }
 }

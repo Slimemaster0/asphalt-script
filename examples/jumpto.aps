@@ -1,0 +1,3 @@
+# jmpto is an unconditional jump that is not relative;
+printf("asphalt-script is best!\n");
+jmpto(0);

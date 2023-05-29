@@ -1,0 +1,9 @@
+# The function jmp is an unconditional and relative jump;
+printf("test\n");
+jmp(3);
+printf("test1\n");
+printf("test2\n");
+printf("test3\n");
+printf("69 is nice\n");
+jmp(-2);
+printf("Error\n");

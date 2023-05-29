@@ -11,8 +11,9 @@ use crate::process::*;
 use crate::format::*;
 use crate::read::read_to_string;
 use crate::binops::binops;
+use crate::jump::*;
 
-pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut usize) -> Value {
+pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Value {
     if input.contains("(") && input.contains(")") {
     let keyword: Vec<&str> = input.split("(").collect();
         match keyword[0].to_owned().as_str().trim() {
@@ -34,13 +35,17 @@ pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut usize) -> Value {
             "div" => return binops(parse_args(input, stack, line_num), '/'),
             // }}}
 
+            "jmp" => jump(parse_args(input, stack, line_num), line_num),
+            "jmpif" => jumpif(parse_args(input, stack, line_num), line_num),
+            "jmpto" => jumpto(parse_args(input, stack, line_num), line_num),
+
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
         }
     }
     return Value::Null;
 }
 
-pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut usize) -> Vec<Value> { // {{{
+pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Vec<Value> { // {{{
 
     if str.len() == 0 { return Vec::new(); };
 

@@ -1,0 +1,10 @@
+# jmpif is a conditional and relative jump;
+printf("demo\n");
+jmpif(nope, 4);
+printf("demo1\n");
+printf("demo2\n");
+printf("demo3\n");
+printf("demo4\n");
+jmpif(yup, 2);
+printf("demo6\n");
+printf("demo7\n");
