@@ -11,6 +11,7 @@ pub enum Value {
     Int(i32),
     String(String),
     Bool(bool),
+    Char(char),
     Error(i32, String)
 }
 

@@ -152,6 +152,24 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Vec<V
             args.push(Value::String(content));
             continue;
 // }}}
+        } else if args_str[i].contains("'") && args_str[i].chars().nth(args_str[i].len() -1).expect("No char at {args_str[i] -1}") == '\'' { // char
+            if args_str[i].contains("'\\") { // Escape codes
+                match args_str[i].trim().chars().nth(2).expect("No char at 2") {
+                    'n' => args.push(Value::Char('\n')),
+                    't' => args.push(Value::Char('\t')),
+                    '0' => args.push(Value::Char('\0')),
+                    '\\' => args.push(Value::Char('\\')),
+                    
+                    _ => {
+                        eprintln!("{RED}ERR:{RESET_FORMAT} Unknown escape code: \'\\{}\'", args_str[i].trim().chars().nth(2).expect("No char at 2"));
+                        exit(INVALID_ESCAPE_CODE);
+                    }
+                }
+            } else {
+                args.push(Value::Char(args_str[i].trim().chars().nth(1).expect("No char at 1")));
+            }
+            continue;
+            
         }  else if args_str[i].chars().nth(args_str[i].len() - 1).expect("add -1 to float checking") == 'F' { // Floating point number
 
             //  args.push();

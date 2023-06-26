@@ -7,6 +7,7 @@ pub fn printf(args: Vec<Value>) {
         match &args[i] {
             Value::Int(v) => print!("{}", v),
             Value::String(v) => print!("{}", v),
+            Value::Char(v) => print!("{}", v),
             Value::Bool(v) => {
                     if v.to_owned() {
                         print!("yup");
