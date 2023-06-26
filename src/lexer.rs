@@ -1,5 +1,5 @@
 // vim:fileencoding=utf-8:foldmethod=marker
-
+// {{{ use
 use std::process::exit;
 use std::env;
 
@@ -14,6 +14,7 @@ use crate::binops::binops;
 use crate::jump::*;
 use crate::comp::*;
 use crate::logic::*;
+// }}}
 
 pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Value {
     if input.contains("(") && input.contains(")") {
@@ -23,6 +24,7 @@ pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Value {
             "test_parse_args" => test_parse_args(parse_args(input, stack, line_num)),
             "die" => die(parse_args(input, stack, line_num)),
             "readf" => return read_to_string(parse_args(input, stack, line_num)),
+            "return" => return parse_args(input, stack, line_num)[0].clone(),
 // {{{ Memory
             "del" => del_var(parse_args(input, stack, line_num), stack),
             "new" => new_var(parse_args(input, stack, line_num), stack),
