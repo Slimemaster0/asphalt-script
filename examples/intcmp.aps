@@ -1,0 +1,5 @@
+printf("2 == 3: ", intcmp(2, "==", 3), '\n');
+printf("2 != 3: ", intcmp(2, "!=", 3), '\n');
+printf("3 < 3: ", intcmp(3, "<", 3), '\n');
+printf("3 < 4: ", intcmp(3, "<", 4), '\n');
+printf("3 <= 3: ", intcmp(3, "<=", 3), '\n');

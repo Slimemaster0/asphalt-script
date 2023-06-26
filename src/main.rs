@@ -9,6 +9,9 @@ mod format;
 mod read;
 mod binops;
 mod jump;
+mod comp;
+mod logic;
+mod function_common;
 
 // Use
 use crate::memory::*;

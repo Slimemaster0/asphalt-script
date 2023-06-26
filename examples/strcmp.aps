@@ -1,0 +1,2 @@
+printf("is lol the same as nope? ", strcmp("lol", "nope"), '\n');
+printf("is 69 the same as 69? ", strcmp("69", "69"), '\n');

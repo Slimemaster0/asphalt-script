@@ -1,0 +1,3 @@
+printf("andgate: ", &&(yup, nope), '\n', "andgate: ", &&(yup, yup), '\n');
+printf("orgate: ", ||(yup, nope), '\n', "orgate: ", ||(yup, yup), '\n');
+printf("not yup: ", !(yup), '\n', "not nope: ", !(nope), '\n');

@@ -12,6 +12,8 @@ use crate::format::*;
 use crate::read::read_to_string;
 use crate::binops::binops;
 use crate::jump::*;
+use crate::comp::*;
+use crate::logic::*;
 
 pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Value {
     if input.contains("(") && input.contains(")") {
@@ -21,23 +23,31 @@ pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Value {
             "test_parse_args" => test_parse_args(parse_args(input, stack, line_num)),
             "die" => die(parse_args(input, stack, line_num)),
             "readf" => return read_to_string(parse_args(input, stack, line_num)),
-
-            // {{{ Memory
+// {{{ Memory
             "del" => del_var(parse_args(input, stack, line_num), stack),
             "new" => new_var(parse_args(input, stack, line_num), stack),
             "mut" => mut_var(parse_args(input, stack, line_num), stack),
-            // }}}
-
-            // {{{ binary operations
+// }}}
+// {{{ binary operations
             "add" => return binops(parse_args(input, stack, line_num), '+'),
             "sub" => return binops(parse_args(input, stack, line_num), '-'),
             "mul" => return binops(parse_args(input, stack, line_num), '*'),
             "div" => return binops(parse_args(input, stack, line_num), '/'),
             // }}}
-
+// {{{ jump
             "jmp" => jump(parse_args(input, stack, line_num), line_num),
             "jmpif" => jumpif(parse_args(input, stack, line_num), line_num),
             "jmpto" => jumpto(parse_args(input, stack, line_num), line_num),
+// }}}
+// {{{ logic gates
+            "&&" => return and(parse_args(input, stack, line_num)),
+            "||" => return or(parse_args(input, stack, line_num)),
+            "!" => return not(parse_args(input, stack, line_num)),
+// }}}
+// {{{ comp
+            "intcmp" => return intcmp(parse_args(input, stack, line_num)),
+            "strcmp" => return strcmp(parse_args(input, stack, line_num)),
+// }}}
 
             _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
         }
