@@ -3,6 +3,9 @@
 use std::process::exit;
 use std::env;
 
+use crate::function::Function;
+use crate::function::fun_finder;
+use crate::function::function_executor;
 use crate::print::*;
 use crate::memory::*;
 use crate::test::*;
@@ -16,48 +19,53 @@ use crate::comp::*;
 use crate::logic::*;
 // }}}
 
-pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Value {
+// {{{ function fun runs a single line of code
+pub fn fun(input: &str, stack: &mut Vec<Item>, line_num: &mut u64, functions: &Vec<Function>) -> Value {
     if input.contains("(") && input.contains(")") {
     let keyword: Vec<&str> = input.split("(").collect();
         match keyword[0].to_owned().as_str().trim() {
-            "printf" => printf(parse_args(input, stack, line_num)),
-            "test_parse_args" => test_parse_args(parse_args(input, stack, line_num)),
-            "die" => die(parse_args(input, stack, line_num)),
-            "readf" => return read_to_string(parse_args(input, stack, line_num)),
-            "return" => return parse_args(input, stack, line_num)[0].clone(),
+            "printf" => printf(parse_args(input, stack, line_num, functions)),
+            "test_parse_args" => test_parse_args(parse_args(input, stack, line_num, functions)),
+            "die" => die(parse_args(input, stack, line_num, functions)),
+            "readf" => return read_to_string(parse_args(input, stack, line_num, functions)),
+            "return" => return parse_args(input, stack, line_num, functions)[0].clone(),
 // {{{ Memory
-            "del" => del_var(parse_args(input, stack, line_num), stack),
-            "new" => new_var(parse_args(input, stack, line_num), stack),
-            "mut" => mut_var(parse_args(input, stack, line_num), stack),
+            "del" => del_var(parse_args(input, stack, line_num, functions), stack),
+            "new" => new_var(parse_args(input, stack, line_num, functions), stack),
+            "mut" => mut_var(parse_args(input, stack, line_num, functions), stack),
 // }}}
 // {{{ binary operations
-            "add" => return binops(parse_args(input, stack, line_num), '+'),
-            "sub" => return binops(parse_args(input, stack, line_num), '-'),
-            "mul" => return binops(parse_args(input, stack, line_num), '*'),
-            "div" => return binops(parse_args(input, stack, line_num), '/'),
+            "add" => return binops(parse_args(input, stack, line_num, functions), '+'),
+            "sub" => return binops(parse_args(input, stack, line_num, functions), '-'),
+            "mul" => return binops(parse_args(input, stack, line_num, functions), '*'),
+            "div" => return binops(parse_args(input, stack, line_num, functions), '/'),
             // }}}
 // {{{ jump
-            "jmp" => jump(parse_args(input, stack, line_num), line_num),
-            "jmpif" => jumpif(parse_args(input, stack, line_num), line_num),
-            "jmpto" => jumpto(parse_args(input, stack, line_num), line_num),
+            "jmp" => jump(parse_args(input, stack, line_num, functions), line_num),
+            "jmpif" => jumpif(parse_args(input, stack, line_num, functions), line_num),
+            "jmpto" => jumpto(parse_args(input, stack, line_num, functions), line_num),
 // }}}
 // {{{ logic gates
-            "&&" => return and(parse_args(input, stack, line_num)),
-            "||" => return or(parse_args(input, stack, line_num)),
-            "!" => return not(parse_args(input, stack, line_num)),
+            "&&" => return and(parse_args(input, stack, line_num, functions)),
+            "||" => return or(parse_args(input, stack, line_num, functions)),
+            "!" => return not(parse_args(input, stack, line_num, functions)),
 // }}}
 // {{{ comp
-            "intcmp" => return intcmp(parse_args(input, stack, line_num)),
-            "strcmp" => return strcmp(parse_args(input, stack, line_num)),
+            "intcmp" => return intcmp(parse_args(input, stack, line_num, functions)),
+            "strcmp" => return strcmp(parse_args(input, stack, line_num, functions)),
 // }}}
 
-            _ => eprintln!("\x1b[31mERR:\x1b[0m {}", input),
+            _ => {
+                let fn_ptr = fun_finder(functions, keyword[0]);
+                return function_executor(&functions[fn_ptr], parse_args(input, stack, line_num, functions), functions);
+            }
         }
     }
     return Value::Null;
 }
+// }}}
 
-pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Vec<Value> { // {{{
+pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut u64, functions: &Vec<Function>) -> Vec<Value> { // {{{
 
     if str.len() == 0 { return Vec::new(); };
 
@@ -116,6 +124,7 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Vec<V
     let mut args_str: Vec<String> = split_muti_points(&string, &split_points);
 
     for i in 0..args_str.len() {
+        if args_str[i].len() == 0 { continue; };
         if args_str[i].chars().nth(0).expect("{RED}Err:{RESET_FORMAT} No char at 0") == ',' {
             let rm_first = remove_first(args_str[i].as_str()).expect("{RED}Err:{RESET_FORMAT} Could not remove first!");
             args_str[i] = rm_first.trim().to_string();
@@ -142,9 +151,10 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Vec<V
     let mut args: Vec<Value> = Vec::new();
 
     for i in 0..args_str.len() { // {{{ parse each argument
-
-        if args_str[i].contains("(") && args_str[i].chars().nth(args_str[i].len() -1).expect("No char at {args_str[i] -1}") == ')' { // function
-            args.push(fun(&args_str[i], stack, line_num));
+        if args_str[i].len() == 0 {
+            continue;
+        } else if args_str[i].contains("(") && args_str[i].chars().nth(args_str[i].len() -1).expect("No char at {args_str[i] -1}") == ')' { // function
+            args.push(fun(&args_str[i], stack, line_num, functions));
             continue;
 
         } else if args_str[i].contains("\"") { // {{{ String
@@ -255,11 +265,11 @@ pub fn parse_args(str: &str, stack: &mut Vec<Item>, line_num: &mut u64) -> Vec<V
     return args;
 }
 
-fn remove_first(s: &str) -> Option<&str> {
+pub fn remove_first(s: &str) -> Option<&str> {
     s.chars().next().map(|c| &s[c.len_utf8()..])
 } // }}}
 
-fn split_muti_points(str: &String, points: &Vec<usize>) -> Vec<String> { // {{{
+pub fn split_muti_points(str: &String, points: &Vec<usize>) -> Vec<String> { // {{{
     let mut return_val: Vec<String> = Vec::new();
 
     if points.len() == 0 {

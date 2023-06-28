@@ -1,1 +1,3 @@
-printf("Hello World!\n");
+fun! boiler() {
+    printf("Hello World!\n");
+}

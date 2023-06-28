@@ -57,7 +57,7 @@ pub fn function_executor(func: &Function, args: Vec<Value>, functions: &Vec<Func
             }
         }
 
-        let ret = fun(code[i as usize], &mut stack, &mut i);
+        let ret = fun(code[i as usize], &mut stack, &mut i, functions);
         i+=1;
         match ret {
             Value::Null => continue,
@@ -71,7 +71,7 @@ pub fn function_executor(func: &Function, args: Vec<Value>, functions: &Vec<Func
 // {{{ Function finder
 pub fn fun_finder(functions: &Vec<Function>, name: &str) -> usize {
     for i in 0..functions.len() {
-        if functions[i].name == name.to_string() {
+        if functions[i].name == name.trim().to_string() {
             return i;
             }
         }

@@ -1,0 +1,18 @@
+fun! boiler() {
+    test();
+    print_number(2);
+    printf("2+1 = ", plusone(2), '\n');
+}
+
+fun! test() {
+    printf("test\n");
+}
+
+fun! print_number(num: int) {
+    printf(&num, '\n');
+}
+
+fun! plusone(num: mut int) {
+    mut("num", add(&num, 1));
+    return(&num);
+}
