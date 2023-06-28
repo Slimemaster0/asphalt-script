@@ -3,4 +3,4 @@ Asphalt-Script is a scripting language written in Rust, making the interpreter 1
 The official file extension is ".aps"
 
 ## IMPORTANT
-Asphalt-Script is in vary early development and each commit can have breaking changes.
+Asphalt-Script is no longer in development.
